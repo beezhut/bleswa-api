@@ -1,1 +1,4 @@
 db.sqlite3
+core/migrations/
+core/__pycache__/
+bleswa_api/__pycache__/
