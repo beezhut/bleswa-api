@@ -6,6 +6,8 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ['name', 'mobile']
     search_fields = ['name', 'mobile']
 
+admin.site.register(Customer, CustomerAdmin)
+
 
 
 class WareHouseAdmin(admin.ModelAdmin):
