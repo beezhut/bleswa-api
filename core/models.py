@@ -139,3 +139,16 @@ class Loan(BaseModel):
 
     class Meta:
         verbose_name_plural = "Loans"
+
+
+class Task(BaseModel):
+    asigned_to = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.PROTECT)
+    loan = models.ForeignKey(Loan, null=True, on_delete=models.PROTECT)
+    status = models.CharField(max_length=10, null=False)
+
+    def __str__(self):
+        return str(self.customer)+" - "+str(self.loan)
+
+    class Meta:
+        verbose_name_plural = "Tasks"
