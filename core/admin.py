@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Customer, WareHouse, Asset, Branch, Loan
+from .models import User, Customer, WareHouse, Asset, Branch, Loan
 
+admin.site.register(User)
 
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['name', 'mobile']
