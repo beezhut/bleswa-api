@@ -1,7 +1,13 @@
 from django.contrib import admin
-from .models import User, Customer, WareHouse, Asset, Branch, Loan
+from .models import User, Customer, WareHouse, Asset, Branch, Loan, Task, Activity
 
-admin.site.register(User)
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', 'mobile', 'designation', 'reporting_to']
+    search_fields = ['first_name', 'last_name', 'email', 'mobile', 'reporting_to']
+    list_filter = ['designation']
+
+admin.site.register(User, UserAdmin)
 
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['name', 'mobile']
@@ -44,6 +50,15 @@ class LoanAdmin(admin.ModelAdmin):
     list_filter = ['type']
 
 admin.site.register(Loan, LoanAdmin)
+
+
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ['loan', 'customer', 'assigned_to', 'status']
+    list_editable = ['status']
+    search_fields = ['loan', 'customer', 'assigned_to', 'staus']
+    list_filter = ['status']
+
+admin.site.register(Task, TaskAdmin)
 
 
 admin.site.site_header = 'Bleswa Solutions'
