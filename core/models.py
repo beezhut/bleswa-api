@@ -146,9 +146,39 @@ class Task(BaseModel):
     customer = models.ForeignKey(Customer, null=True, on_delete=models.PROTECT)
     loan = models.ForeignKey(Loan, null=True, on_delete=models.PROTECT)
     status = models.CharField(max_length=10, null=False)
+    description = address = models.TextField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return str(self.customer)+" - "+str(self.loan)
 
     class Meta:
         verbose_name_plural = "Tasks"
+
+
+
+class Activity(BaseModel):
+    task = models.ForeignKey(Task, null=True, on_delete=models.PROTECT)
+    longitude = models.CharField(max_length=10, null=True)
+    latitude = models.CharField(max_length=10, null=True)
+    date_time = models.DateTimeField(null=True)
+    status = models.CharField(max_length=10, null=False)
+    address = models.TextField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.task)
+
+    class Meta:
+        verbose_name_plural = "Activities"
+
+
+class Image(BaseModel):
+    name = models.CharField(max_length=50, null=False)
+    extension = models.CharField(max_length=10, null=False)
+    image = models.ImageField(upload_to='images', null=True, blank=True)
+    activity = models.ForeignKey(Activity, null=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        verbose_name_plural = "Images"
