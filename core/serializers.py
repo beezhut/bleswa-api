@@ -1,18 +1,28 @@
 from rest_framework import serializers, fields
 from .models import *
 
-'''class ItemSerializer(serializers.ModelSerializer):
 
-    quantities = QuantitySerializer(many=True)
-    addons = AddonSerializer(many=True)
-    category_name = serializers.CharField(source='category.name')
-    image_url = serializers.SerializerMethodField('get_image_url')
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'mobile')
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ('id', 'name', 'address', 'mobile')
+
+class LoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ('id', 'loan_account_number', 'type', 'amount')
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    assigned_to = UserSerializer()
+    customer = CustomerSerializer()
+    loan = LoanSerializer()
 
     class Meta:
-        model = Item
-        fields = ('id', 'name', 'api_name', 'description', 'image_url', 'category_name', 'quantities', 'is_enabled', 'addons')
-
-    def get_image_url(self, obj):
-        if(obj.image):
-            return obj.image.url
-        return None'''
+        model = Task
+        fields = ('id', 'assigned_to', 'customer', 'loan', 'status', 'description')
