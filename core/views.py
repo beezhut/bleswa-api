@@ -47,7 +47,7 @@ class TaskDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ActivityAPIView(generics.ListAPIView, mixins.CreateModelMixin):
+class ActivityList(generics.ListAPIView, mixins.CreateModelMixin):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     search_fields = ['status']
@@ -56,3 +56,33 @@ class ActivityAPIView(generics.ListAPIView, mixins.CreateModelMixin):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+    
+
+class ActivityDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+
+    def get_object(self, pk):
+        try:
+            return Activity.objects.get(pk=pk)
+        except Activity.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = ActivitySerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = ActivitySerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

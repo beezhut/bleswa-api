@@ -36,4 +36,4 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Activity
-        fields = ('task_id', 'latitude', 'longitude', 'completed_time', 'status', 'feedback', 'collected_amount', 'payment_status')
+        fields = ('id', 'task_id', 'latitude', 'longitude', 'completed_time', 'status', 'feedback', 'collected_amount', 'payment_status')
