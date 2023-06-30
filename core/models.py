@@ -105,7 +105,7 @@ class WareHouse(BaseModel):
 class Asset(BaseModel):
     type = models.CharField(max_length=100, null=False)
     value = models.DecimalField(max_digits=15, decimal_places=2)
-    warehouse = models.ForeignKey(WareHouse, null=True, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(WareHouse, null=True, on_delete=models.CASCADE, blank=True)
     status = models.CharField(max_length=10, null=False)
 
     def __str__(self):

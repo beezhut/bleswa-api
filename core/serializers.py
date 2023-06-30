@@ -7,21 +7,42 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email', 'mobile')
 
+class WareHouseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WareHouse
+        fields = ('id', 'name', 'address', 'latitide', 'longitude')
+
+class AssetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asset
+        fields = ('id', 'type', 'value', 'warehouse', 'status')
+
+    
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'name', 'address', 'mobile')
 
 class LoanSerializer(serializers.ModelSerializer):
+    customer = CustomerSerializer(read_only=True)
+    customer_id = serializers.PrimaryKeyRelatedField(queryset = Customer.objects.all(), source = 'customer',  write_only = True, allow_null = True)
+    asset = AssetSerializer(read_only=True)
+    asset_id = serializers.PrimaryKeyRelatedField(queryset = Asset.objects.all(), source = 'asset',  write_only = True, allow_null = True)
+
     class Meta:
         model = Loan
-        fields = ('id', 'loan_account_number', 'type', 'total_amount', 'balance_amount')
+        fields = ('id', 'loan_account_number', 'type', 'sub_type', 'total_amount', 'balance_amount', 'customer', 'customer_id', 'asset', 'asset_id', 'branch')
+
+class LoanMiniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ('id', 'loan_account_number', 'type', 'sub_type', 'total_amount', 'balance_amount', 'customer', 'asset', 'branch')
 
 
 class TaskSerializer(serializers.ModelSerializer):
     assigned_to = UserSerializer(read_only=True)
     customer = CustomerSerializer(read_only=True)
-    loan = LoanSerializer(read_only=True)
+    loan = LoanMiniSerializer(read_only=True)
     assignee_id = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(), source = 'assigned_to',  write_only = True, allow_null = True)
     customer_id = serializers.PrimaryKeyRelatedField(queryset = Customer.objects.all(), source = 'customer',  write_only = True, allow_null = True)
     loan_id = serializers.PrimaryKeyRelatedField(queryset = Loan.objects.all(), source = 'loan', write_only = True, allow_null = True)
