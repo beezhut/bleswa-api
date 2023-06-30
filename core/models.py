@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from datetime import date
+from datetime import datetime    
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from core.utils import get_current_user
 
@@ -91,8 +92,8 @@ class Customer(BaseModel):
 class WareHouse(BaseModel):
     name = models.CharField(max_length=100, null=False)
     address = models.TextField(max_length=500, null=True, blank=True)
-    longitude = models.CharField(max_length=10, null=True)
-    latitude = models.CharField(max_length=10, null=True)
+    longitude = models.CharField(max_length=10, null=True, blank=True)
+    latitude = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return str(self.name)
@@ -127,11 +128,13 @@ class Branch(BaseModel):
 
 class Loan(BaseModel):
     loan_account_number = models.CharField(max_length=100, null=False)
-    type = models.CharField(max_length=10, null=False)
-    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    type = models.CharField(max_length=30, null=False)
+    sub_type = models.CharField(max_length=30, null=True, blank=True)
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    balance_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     loan_created_date = models.DateField(default=date.today)
     customer = models.ForeignKey(Customer, null=True, on_delete=models.CASCADE)
-    asset = models.ForeignKey(Asset, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, null=True, on_delete=models.CASCADE, blank=True)
     branch = models.ForeignKey(Branch, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -158,11 +161,13 @@ class Task(BaseModel):
 
 class Activity(BaseModel):
     task = models.ForeignKey(Task, null=True, on_delete=models.PROTECT)
-    longitude = models.CharField(max_length=10, null=True)
-    latitude = models.CharField(max_length=10, null=True)
-    date_time = models.DateTimeField(null=True)
-    status = models.CharField(max_length=10, null=False)
-    address = models.TextField(max_length=500, null=True, blank=True)
+    longitude = models.CharField(max_length=10, null=True, blank=True)
+    latitude = models.CharField(max_length=10, null=True, blank=True)
+    completed_time = models.DateTimeField(default=datetime.now, blank=True)
+    status = models.CharField(max_length=20, null=False)
+    feedback = models.TextField(max_length=500, null=True, blank=True)
+    collected_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    payment_status = models.CharField(max_length=20, null=True)
 
     def __str__(self):
         return str(self.task)

@@ -91,7 +91,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'bleswa_api.utils.CustomPagination',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 10,
     'NON_FIELD_ERRORS_KEY': 'error',
 }
 

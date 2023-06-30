@@ -44,7 +44,7 @@ admin.site.register(Branch, BranchAdmin)
 
 
 class LoanAdmin(admin.ModelAdmin):
-    list_display = ['loan_account_number', 'type', 'amount', 'customer', 'branch']
+    list_display = ['loan_account_number', 'type', 'total_amount', 'balance_amount', 'customer', 'branch']
     list_editable = ['branch']
     search_fields = ['loan_account_number', 'customer', 'branch', 'type']
     list_filter = ['type']
@@ -61,4 +61,10 @@ class TaskAdmin(admin.ModelAdmin):
 admin.site.register(Task, TaskAdmin)
 
 
-admin.site.site_header = 'Bleswa Solutions'
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ['task', 'status', 'payment_status', 'completed_time', 'longitude', 'latitude']
+    list_editable = ['status', 'payment_status']
+    search_fields = ['task', 'status']
+    list_filter = ['status', 'payment_status']
+
+admin.site.register(Activity, ActivityAdmin)
