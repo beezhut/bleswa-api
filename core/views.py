@@ -4,20 +4,29 @@ from .serializers import TaskSerializer, ActivitySerializer, LoanSerializer
 from rest_framework import mixins
 from rest_framework.response import Response
 from django.http import Http404
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class TasksList(generics.ListAPIView, mixins.CreateModelMixin):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     search_fields = ['customer', 'status']
     ordering_fields = ['assigned_to', 'customer']
     ordering = ['assigned_to', 'customer']
 
+    def get_queryset(self):
+        return Task.objects.filter(assigned_to=self.request.user.id)
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
 class TaskDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -48,17 +57,25 @@ class TaskDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Dest
 
 
 class ActivityList(generics.ListAPIView, mixins.CreateModelMixin):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     search_fields = ['status']
     ordering_fields = ['status']
     ordering = ['status']
 
+    def get_queryset(self):
+        return Task.objects.filter(assigned_to=self.request.user.id)
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
 
 class ActivityDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
@@ -89,17 +106,25 @@ class ActivityDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
     
 
 class LoanList(generics.ListAPIView, mixins.CreateModelMixin):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
     search_fields = ['loan_account_number', 'customer', 'asset']
     ordering_fields = ['status', 'loan_account_number']
     ordering = ['status', 'loan_account_number']
 
+    def get_queryset(self):
+        return Task.objects.filter(assigned_to=self.request.user.id)
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
 
 class LoanDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
